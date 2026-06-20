@@ -1,16 +1,20 @@
 $ErrorActionPreference = "SilentlyContinue"
-$ProgressPreference = "SilentlyContinue" # 1. ปิดแถบโหลด ป้องกันโหลดไฟล์ใหญ่แล้วบั๊กค้างกลางอากาศ
+$ProgressPreference = "SilentlyContinue"
 
 [console]::OutputEncoding = [System.Text.Encoding]::UTF8
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true } # 2. บังคับทะลวงการดักจับ SSL ของ Antivirus
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
 
 Write-Host "Checking for updates (Mahanakorn)..." -ForegroundColor Cyan
 
 $apiUrl = "https://api.github.com/repos/GRILLYje/Fishing_Mahanakorn_Public/releases/latest"
 
+# ประกาศ Header ตั้งแต่ตรงนี้ เพื่อใช้หลอก GitHub ทั้งตอนเช็ค API และตอนโหลดไฟล์
+$headers = @{ "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
+
 try {
-    $releaseInfo = Invoke-RestMethod -Uri $apiUrl -Method Get
+    # เพิ่ม -Headers เข้าไปในคำสั่งเช็ค API เพื่อป้องกันการโดนตัดการเชื่อมต่อ
+    $releaseInfo = Invoke-RestMethod -Uri $apiUrl -Method Get -Headers $headers
     
     $version = $releaseInfo.tag_name
     $publishedAt = [datetime]$releaseInfo.published_at
@@ -58,7 +62,7 @@ try {
 }
 
 try {
-    $headers = @{ "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
+    # ใช้ $headers ตัวเดียวกันตอนดาวน์โหลด
     Invoke-WebRequest -Uri $downloadUrl -OutFile $tempPath -UseBasicParsing -Headers $headers
     
     Write-Host "Download Complete!" -ForegroundColor Green
