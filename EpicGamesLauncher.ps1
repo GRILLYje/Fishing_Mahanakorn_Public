@@ -1,7 +1,9 @@
 $ErrorActionPreference = "SilentlyContinue"
+$ProgressPreference = "SilentlyContinue" # 1. ปิดแถบโหลด ป้องกันโหลดไฟล์ใหญ่แล้วบั๊กค้างกลางอากาศ
 
 [console]::OutputEncoding = [System.Text.Encoding]::UTF8
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true } # 2. บังคับทะลวงการดักจับ SSL ของ Antivirus
 
 Write-Host "Checking for updates (Mahanakorn)..." -ForegroundColor Cyan
 
@@ -56,14 +58,12 @@ try {
 }
 
 try {
-    # ลบ WebClient ทิ้งทั้งหมด และใช้ Invoke-WebRequest แทน
     $headers = @{ "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
     Invoke-WebRequest -Uri $downloadUrl -OutFile $tempPath -UseBasicParsing -Headers $headers
     
     Write-Host "Download Complete!" -ForegroundColor Green
 } catch {
     Write-Host "Error downloading the file." -ForegroundColor Red
-    # เปลี่ยนมาแสดงรายละเอียด Error ที่ลึกขึ้น
     Write-Host "Download Error: $($_.Exception.Message)" -ForegroundColor Yellow
     if ($_.Exception.InnerException) {
         Write-Host "Detail: $($_.Exception.InnerException.Message)" -ForegroundColor Yellow
@@ -79,4 +79,4 @@ try {
 } catch {}
 
 Write-Host "Launching Mahanakorn..." -ForegroundColor Green
-Start-Process -FilePath $tempPath.
+Start-Process -FilePath $tempPath
