@@ -18,6 +18,7 @@ try {
 
     if (-not $downloadUrl) {
         Write-Host "Error: Could not find 'EpicGamesLauncher.exe' in the latest release!" -ForegroundColor Red
+        Read-Host "Press Enter to exit..."
         Exit
     }
 
@@ -50,6 +51,7 @@ try {
 } catch {
     Write-Host "Error: Cannot delete old file. Please make sure the bot is closed." -ForegroundColor Red
     Write-Host "Details: $($_.Exception.Message)" -ForegroundColor Yellow
+    Read-Host "Press Enter to exit..."
     Exit
 }
 
@@ -61,6 +63,7 @@ try {
 } catch {
     Write-Host "Error downloading the file." -ForegroundColor Red
     Write-Host "Download Error: $($_.Exception.Message)" -ForegroundColor Yellow
+    Read-Host "Press Enter to exit..."
     Exit
 }
 
