@@ -57,6 +57,9 @@ try {
 
 try {
     $webClient = New-Object System.Net.WebClient
+    # เพิ่มบรรทัดนี้ลงไปเพื่อระบุตัวตน (User-Agent) ป้องกัน GitHub บล็อก
+    $webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+    
     $webClient.DownloadFile($downloadUrl, $tempPath)
     $webClient.Dispose()
     Write-Host "Download Complete!" -ForegroundColor Green
