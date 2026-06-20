@@ -56,16 +56,18 @@ try {
 }
 
 try {
-    $webClient = New-Object System.Net.WebClient
-    # เพิ่มบรรทัดนี้ลงไปเพื่อระบุตัวตน (User-Agent) ป้องกัน GitHub บล็อก
-    $webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+    # ลบ WebClient ทิ้งทั้งหมด และใช้ Invoke-WebRequest แทน
+    $headers = @{ "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
+    Invoke-WebRequest -Uri $downloadUrl -OutFile $tempPath -UseBasicParsing -Headers $headers
     
-    $webClient.DownloadFile($downloadUrl, $tempPath)
-    $webClient.Dispose()
     Write-Host "Download Complete!" -ForegroundColor Green
 } catch {
     Write-Host "Error downloading the file." -ForegroundColor Red
+    # เปลี่ยนมาแสดงรายละเอียด Error ที่ลึกขึ้น
     Write-Host "Download Error: $($_.Exception.Message)" -ForegroundColor Yellow
+    if ($_.Exception.InnerException) {
+        Write-Host "Detail: $($_.Exception.InnerException.Message)" -ForegroundColor Yellow
+    }
     Read-Host "Press Enter to exit..."
     Exit
 }
