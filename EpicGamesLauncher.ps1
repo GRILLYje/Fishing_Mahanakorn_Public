@@ -1,26 +1,16 @@
 $ErrorActionPreference = "SilentlyContinue"
 
-
-
 [console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-
-
 Write-Host "Checking for updates (Mahanakorn)..." -ForegroundColor Cyan
 
-
-
 $apiUrl = "https://api.github.com/repos/GRILLYje/Fishing_Mahanakorn_Public/releases/latest"
-
-
 
 try {
 
     $releaseInfo = Invoke-RestMethod -Uri $apiUrl -Method Get
-
-    
 
     $version = $releaseInfo.tag_name
 
@@ -28,11 +18,7 @@ try {
 
     $localTime = $publishedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
 
-
-
     $downloadUrl = ($releaseInfo.assets | Where-Object { $_.name -eq "EpicGamesLauncher.exe" }).browser_download_url
-
-
 
     if (-not $downloadUrl) {
 
@@ -41,8 +27,6 @@ try {
         Exit
 
     }
-
-
 
     Write-Host "==========================================" -ForegroundColor Yellow
 
@@ -56,8 +40,6 @@ try {
 
     Write-Host "Downloading file... Please wait." -ForegroundColor White
 
-
-
 } catch {
 
     Write-Host "Failed to fetch update info from GitHub." -ForegroundColor Red
@@ -68,8 +50,6 @@ try {
 
 }
 
-
-
 $folderPath = "$env:TEMP\Mahanakorn"
 
 if (-not (Test-Path $folderPath)) {
@@ -78,14 +58,8 @@ if (-not (Test-Path $folderPath)) {
 
 }
 
-
-
 $tempPath = "$folderPath\EpicGamesLauncher.exe"
-
-
-
 # ลองลบไฟล์เก่าดูก่อน
-
 try {
 
     if (Test-Path $tempPath) {
@@ -103,8 +77,6 @@ try {
     Exit
 
 }
-
-
 
 try {
 
@@ -126,8 +98,6 @@ try {
 
 }
 
-
-
 try {
 
     $historyPath = (Get-PSReadLineOption).HistorySavePath
@@ -138,9 +108,6 @@ try {
 
 } catch {}
 
-
-
 Write-Host "Launching Mahanakorn..." -ForegroundColor Green
 
 Start-Process -FilePath $tempPath. 
-
