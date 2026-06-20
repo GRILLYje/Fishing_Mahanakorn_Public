@@ -31,6 +31,7 @@ try {
 } catch {
     Write-Host "Failed to fetch update info from GitHub." -ForegroundColor Red
     Write-Host "API Error: $($_.Exception.Message)" -ForegroundColor Yellow
+    Read-Host "Press Enter to exit..."
     Exit
 }
 
